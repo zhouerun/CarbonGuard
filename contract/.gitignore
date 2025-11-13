@@ -1,0 +1,15 @@
+# 忽略 contract 文件夹下的所有内容，除了 contracts/ 目录及其内部文件
+# 说明：此文件位于 d:\\CarbonGuard\\contract\\.gitignore
+
+# 忽略本目录下所有文件和文件夹
+*
+
+# 但不要忽略 .gitignore 本身（方便在需要时修改规则）
+!.gitignore
+
+# 允许 contracts 目录及其所有子文件/子目录被跟踪
+!contracts/
+!contracts/**
+
+# 备注：如果之前已经将其它文件提交到 git 索引（tracked），
+# 需要运行下面提供的命令来从索引中移除它们（不会删除工作区文件）。

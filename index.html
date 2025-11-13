@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonGuard - 碳信用管理系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <h1>🌿 CarbonGuard</h1>
+            <div class="wallet-section">
+                <button id="connectWallet" class="btn btn-primary">连接钱包</button>
+                <span id="walletAddress" class="wallet-address">未连接</span>
+                <span id="networkInfo" class="network-info"></span>
+            </div>
+        </header>
+
+        <!-- 主要功能区域 -->
+        <main class="main-content">
+            <!-- 状态面板 -->
+            <div class="status-panel">
+                <div class="status-card">
+                    <h3>网络状态</h3>
+                    <p id="networkStatus">未连接</p>
+                </div>
+                <div class="status-card">
+                    <h3>当前账户</h3>
+                    <p id="currentAccount">未连接</p>
+                </div>
+                <div class="status-card">
+                    <h3>合约状态</h3>
+                    <p id="contractStatus">未连接</p>
+                </div>
+            </div>
+
+            <!-- 功能标签页 -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="project">项目管理</button>
+                <button class="tab-button" data-tab="mint">铸造代币</button>
+                <button class="tab-button" data-tab="retire">退休代币</button>
+                <button class="tab-button" data-tab="query">查询信息</button>
+            </div>
+
+            <!-- 项目管理标签页 -->
+            <div id="project-tab" class="tab-content active">
+                <h2>创建碳信用项目</h2>
+                <form id="createProjectForm" class="form">
+                    <div class="form-group">
+                        <label for="projectId">项目ID:</label>
+                        <input type="text" id="projectId" required placeholder="例如: SOLAR-FARM-001">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectType">项目类型:</label>
+                        <select id="projectType" required>
+                            <option value="">选择类型</option>
+                            <option value="solar">太阳能</option>
+                            <option value="wind">风能</option>
+                            <option value="hydro">水力</option>
+                            <option value="reforestation">植树造林</option>
+                            <option value="carbon_capture">碳捕获</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">项目地点:</label>
+                        <input type="text" id="location" required placeholder="例如: 中国云南">
+                    </div>
+                    <div class="form-group">
+                        <label for="tokenURI">项目元数据URI:</label>
+                        <input type="text" id="tokenURI" required 
+                               placeholder="例如: https://ipfs.io/ipfs/QmExample" 
+                               value="https://example.com/carbon-metadata.json">
+                    </div>
+                    <button type="submit" class="btn btn-primary">创建项目</button>
+                </form>
+
+                <div class="section-divider"></div>
+
+                <h2>验证项目</h2>
+                <form id="verifyProjectForm" class="form">
+                    <div class="form-group">
+                        <label for="verifyTokenId">项目Token ID:</label>
+                        <input type="number" id="verifyTokenId" required placeholder="例如: 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="verifiedCredits">验证碳信用数量:</label>
+                        <input type="number" id="verifiedCredits" required placeholder="例如: 10000">
+                    </div>
+                    <button type="submit" class="btn btn-warning">验证项目</button>
+                </form>
+            </div>
+
+            <!-- 铸造代币标签页 -->
+            <div id="mint-tab" class="tab-content">
+                <h2>铸造碳信用代币</h2>
+                <form id="mintForm" class="form">
+                    <div class="form-group">
+                        <label for="mintTokenId">项目Token ID:</label>
+                        <input type="number" id="mintTokenId" required placeholder="例如: 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="mintTo">接收地址:</label>
+                        <input type="text" id="mintTo" required placeholder="0x...">
+                    </div>
+                    <div class="form-group">
+                        <label for="mintAmount">铸造数量:</label>
+                        <input type="number" id="mintAmount" required placeholder="例如: 1000">
+                    </div>
+                    <button type="submit" class="btn btn-success">铸造代币</button>
+                </form>
+            </div>
+
+            <!-- 退休代币标签页 -->
+            <div id="retire-tab" class="tab-content">
+                <h2>退休碳信用代币</h2>
+                <form id="retireForm" class="form">
+                    <div class="form-group">
+                        <label for="retireTokenId">项目Token ID:</label>
+                        <input type="number" id="retireTokenId" required placeholder="例如: 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="retireAmount">退休数量:</label>
+                        <input type="number" id="retireAmount" required placeholder="例如: 100">
+                    </div>
+                    <div class="form-group">
+                        <label for="retirePurpose">退休目的:</label>
+                        <textarea id="retirePurpose" required placeholder="例如: 2024年第一季度企业碳中和报告"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">退休代币</button>
+                </form>
+            </div>
+
+            <!-- 查询信息标签页 -->
+            <div id="query-tab" class="tab-content">
+                <h2>查询项目信息</h2>
+                <form id="queryForm" class="form">
+                    <div class="form-group">
+                        <label for="queryTokenId">项目Token ID:</label>
+                        <input type="number" id="queryTokenId" required placeholder="例如: 1">
+                    </div>
+                    <button type="submit" class="btn btn-info">查询项目</button>
+                </form>
+
+                <div id="projectInfo" class="project-info" style="display: none;">
+                    <h3>项目详情</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>项目ID:</label>
+                            <span id="info-projectId">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>项目类型:</label>
+                            <span id="info-projectType">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>项目地点:</label>
+                            <span id="info-location">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>项目所有者:</label>
+                            <span id="info-owner">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>验证数量:</label>
+                            <span id="info-verified">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>已铸造:</label>
+                            <span id="info-minted">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>已退休:</label>
+                            <span id="info-retired">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>活跃数量:</label>
+                            <span id="info-active">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>项目状态:</label>
+                            <span id="info-status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <h2>查询账户余额</h2>
+                <form id="balanceForm" class="form">
+                    <div class="form-group">
+                        <label for="balanceTokenId">项目Token ID:</label>
+                        <input type="number" id="balanceTokenId" required placeholder="例如: 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="balanceAddress">查询地址:</label>
+                        <input type="text" id="balanceAddress" placeholder="留空则查询当前账户">
+                    </div>
+                    <button type="submit" class="btn btn-info">查询余额</button>
+                </form>
+                <div id="balanceResult" class="balance-result"></div>
+            </div>
+
+            <!-- 交易状态显示 -->
+            <div id="transactionStatus" class="transaction-status" style="display: none;">
+                <h3>交易状态</h3>
+                <div id="statusMessage" class="status-message"></div>
+                <div id="transactionHash" class="transaction-hash"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 加载 Web3 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="wallet.js"></script>
+    <script src="contract.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
