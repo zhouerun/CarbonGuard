@@ -48,6 +48,12 @@ class CarbonCreditApp {
             e.preventDefault();
             this.handleQueryBalance();
         });
+
+        document.getElementById('transferForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleTransferTokens();
+        });
+
     }
 
     // 设置标签页导航
@@ -195,6 +201,23 @@ class CarbonCreditApp {
             contractManager.showTransactionStatus('查询余额失败: ' + error.message, 'error');
         }
     }
+
+    // 处理转账代币
+    async handleTransferTokens() {
+        if (!this.validateWalletConnection()) return;
+
+        const tokenId = document.getElementById('transferTokenId').value;
+        const to = document.getElementById('transferTo').value;
+        const amount = document.getElementById('transferAmount').value;
+
+        try {
+            await contractManager.transferTokens(tokenId, to, amount);
+            document.getElementById('transferForm').reset();
+        } catch (error) {
+            contractManager.showTransactionStatus('转账失败: ' + error.message, 'error');
+        }
+    }
+
 
     // 显示项目信息
     displayProjectInfo(projectInfo) {

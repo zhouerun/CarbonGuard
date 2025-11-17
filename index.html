@@ -42,6 +42,7 @@
                 <button class="tab-button" data-tab="mint">铸造代币</button>
                 <button class="tab-button" data-tab="retire">退休代币</button>
                 <button class="tab-button" data-tab="query">查询信息</button>
+                <button class="tab-button" data-tab="transfer">转账</button>
             </div>
 
             <!-- 项目管理标签页 -->
@@ -202,6 +203,27 @@
                 <div id="balanceResult" class="balance-result"></div>
             </div>
 
+            <!--转账标签页-->
+            <div id="transfer-tab" class="tab-content">
+                <h2>转移碳信用 Token</h2>
+                <form id="transferForm" class="form">
+                    <div class="form-group">
+                        <label for="transferTokenId">项目Token ID:</label>
+                        <input type="number" id="transferTokenId" placeholder="例如：1" />
+                    </div>
+                    <div class="form-group">
+                        <label for="transferTo">接收地址:</label>
+                        <input type="text" id="transferTo" placeholder="0x..." />
+                    </div>
+                    <div class="form-group">
+                        <label for="transferAmount">转移数量:</label>
+                        <input type="number" id="transferAmount" placeholder="例如：100" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Transfer</button>
+                </form>
+            </div>
+
+
             <!-- 交易状态显示 -->
             <div id="transactionStatus" class="transaction-status" style="display: none;">
                 <h3>交易状态</h3>
@@ -212,9 +234,14 @@
     </div>
 
     <!-- 加载 Web3 库 -->
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
-    <script src="wallet.js"></script>
-    <script src="contract.js"></script>
-    <script src="app.js"></script>
+    <!-- 加载 Ethers.js（全局版本，不需要 import） -->
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+
+    <script src="./wallet.js"></script>
+    <script src="./contract.js"></script>
+    <script src="./app.js"></script>
+
 </body>
 </html>
