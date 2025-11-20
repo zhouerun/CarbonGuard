@@ -1,6 +1,6 @@
 // contract-config.js
 
-export const CONTRACT_ADDRESS = "0x559d9efaC691308Ac5F71cfD6eF8b5c13c0B614C";
+export const CONTRACT_ADDRESS = "0x8F31eF30c23F399C6659B105c60E5012fc6C0304";
 
 export const CONTRACT_ABI = [
     {
@@ -250,7 +250,7 @@ export const CONTRACT_ABI = [
                 "type": "uint256"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -273,7 +273,7 @@ export const CONTRACT_ABI = [
         ],
         "name": "mintCarbonCredit",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -372,7 +372,7 @@ export const CONTRACT_ABI = [
         ],
         "name": "retireCarbonCredit",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -468,6 +468,42 @@ export const CONTRACT_ABI = [
             }
         ],
         "name": "setAuditor",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_feeRecipient",
+                "type": "address"
+            }
+        ],
+        "name": "setFeeRecipient",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_initFeePerProject",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_mintFeePerCredit",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_retireFeePerCredit",
+                "type": "uint256"
+            }
+        ],
+        "name": "setFees",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -658,6 +694,19 @@ export const CONTRACT_ABI = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "feeRecipient",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -756,6 +805,19 @@ export const CONTRACT_ABI = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "initFeePerProject",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "address",
@@ -774,6 +836,19 @@ export const CONTRACT_ABI = [
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "mintFeePerCredit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -852,6 +927,19 @@ export const CONTRACT_ABI = [
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "retireFeePerCredit",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "bytes4",
@@ -865,6 +953,19 @@ export const CONTRACT_ABI = [
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalFeeRevenue",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",

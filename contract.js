@@ -100,23 +100,22 @@ class ContractManager {
         }
     }
 
-    //--------------------------------------------
     // 创建项目
-    //--------------------------------------------
     async createProject(projectId, projectType, location, tokenURI) {
-        return this.sendTx(
-            () =>
-                this.contract.createProject(
-                    projectId,
-                    projectType,
-                    location,
-                    tokenURI
-                ),
-            "正在创建项目..."
-        ).then((receipt) => {
-            // 从事件中解析 tokenId
-            const tokenId = this.extractTokenFromEvent(receipt, "ProjectCreated");
+        // initFeePerProject 在合约里是public变量，可以直接get
+        const initFee = await this.contract.initFeePerProject();
 
+        return this.sendTx(
+            () => this.contract.createProject(
+                projectId,
+                projectType,
+                location,
+                tokenURI,
+                { value: initFee }      // ⭐ 这里附带 ETH
+            ),
+            "正在创建项目并支付初始化费..."
+        ).then((receipt) => {
+            const tokenId = this.extractTokenFromEvent(receipt, "ProjectCreated");
             if (tokenId) {
                 this.showTransactionStatus(
                     `项目创建成功！Token ID: ${tokenId}`,
@@ -128,6 +127,7 @@ class ContractManager {
         });
     }
 
+
     //--------------------------------------------
     // 验证项目
     //--------------------------------------------
@@ -138,30 +138,40 @@ class ContractManager {
         );
     }
 
-    //--------------------------------------------
-    // 铸造碳信用额度
-    //--------------------------------------------
+    //铸造碳信用额度
     async mintCarbonCredit(tokenId, to, amount) {
+        // 1. 从链上读取每 credit 的费用
+        const mintFeePerCredit = await this.contract.mintFeePerCredit();
+        // 2. 计算总费用 = 单价 * 数量
+        const totalFee = mintFeePerCredit * BigInt(amount); // amount 建议在外部转成 BigInt
+
         return this.sendTx(
-            () => this.contract.mintCarbonCredit(tokenId, to, amount),
-            "正在铸造代币..."
+            () => this.contract.mintCarbonCredit(
+                tokenId,
+                to,
+                amount,
+                { value: totalFee }      // ⭐ 关键：带上 value
+            ),
+            "正在铸造代币并支付铸造费用..."
         );
     }
 
-    //--------------------------------------------
-    // 退休代币
-    //--------------------------------------------
+    //退休代币
     async retireCarbonCredit(tokenId, amount, purpose) {
+        const retireFeePerCredit = await this.contract.retireFeePerCredit();
+        const totalFee = retireFeePerCredit * BigInt(amount);
+
         return this.sendTx(
-            () =>
-                this.contract.retireCarbonCredit(
-                    tokenId,
-                    amount,
-                    purpose
-                ),
-            "正在退休代币..."
+            () => this.contract.retireCarbonCredit(
+                tokenId,
+                amount,
+                purpose,
+                { value: totalFee }     // ⭐ 关键
+            ),
+            "正在退休代币并支付注销费用..."
         );
     }
+
 
     //--------------------------------------------
     // 查询项目信息（call，不走交易）
