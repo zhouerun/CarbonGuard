@@ -12,6 +12,10 @@
         <header class="header">
             <h1>🌿 CarbonGuard</h1>
             <div class="wallet-section">
+                <button id="toDashboard" class="btn btn-info" onclick="window.location.href='dashboard.html'">
+                    查看 ESG Dashboard
+                </button>
+
                 <button id="connectWallet" class="btn btn-primary">连接钱包</button>
                 <span id="walletAddress" class="wallet-address">未连接</span>
                 <span id="networkInfo" class="network-info"></span>
@@ -240,7 +244,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 
     <script src="./wallet.js"></script>
-    <script src="./contract.js"></script>
+    <script type="module" src="./contract.js"></script>
     <script src="./app.js"></script>
 
 </body>

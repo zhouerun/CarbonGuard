@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CarbonGuard ESG Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+    <script type="module" src="./dashboard.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>CarbonGuard ESG Dashboard</h1>
+        <p class="subtitle">Transparent, auditable carbon credit lifecycle</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Project Selector -->
+        <div class="card selector-card">
+            <label for="projectSelector" class="selector-label">Select Project:</label>
+            <select id="projectSelector" class="selector-input"></select>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary-grid">
+            <div class="card">
+                <h3>Total Minted</h3>
+                <p id="mintedValue">0</p>
+            </div>
+            <div class="card">
+                <h3>Total Retired</h3>
+                <p id="retiredValue">0</p>
+            </div>
+            <div class="card">
+                <h3>Verified Credits</h3>
+                <p id="verifiedValue">0</p>
+            </div>
+            <div class="card">
+                <h3>Retirement %</h3>
+                <p id="rateValue">0%</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <!-- Row 1: Bar chart + Pie+Gauge -->
+        <div class="chart-row">
+        
+            <!-- Left: Bar Chart -->
+            <div class="chart-card">
+                <h3>Top Retirers</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+        
+            <!-- Right: Pie + Gauge in one card -->
+            <div class="chart-card">
+                <h3>Project Status Overview</h3>
+        
+                <div class="chart-pair">
+                    <canvas id="pieChart"></canvas>
+                    <canvas id="gaugeChart"></canvas>
+                </div>
+
+            </div>
+        
+        </div>
+        
+        <!-- Row 2: Full-width Retirement Trend -->
+        <div class="chart-row-full">
+            <div class="chart-card">
+                <h3>Retirement Trend</h3>
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
