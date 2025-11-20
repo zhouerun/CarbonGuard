@@ -96,6 +96,10 @@ class CarbonCreditApp {
         try {
             await wallet.connectWallet();
             await contractManager.initContract();
+            // 🌟 在这里插入所有 fee 的 UI 展示
+            this.showInitFee();
+            this.setupMintFeeListener();
+            this.setupRetireFeeListener();
         } catch (error) {
             console.error('连接失败:', error);
         } finally {
@@ -266,6 +270,63 @@ class CarbonCreditApp {
         }
         return true;
     }
+
+    async showInitFee() {
+        try {
+            const fee = await contractManager.contract.initFeePerProject();
+            const ethFee = ethers.formatEther(fee);
+
+            const el = document.getElementById("initFeeInfo");
+            if (el) {
+                el.innerHTML = `
+                <span style="color:#764ba2;">此操作将收取 <b>${ethFee} ETH</b> 初始化费用</span>
+            `;
+            }
+        } catch (err) {
+            console.error("初始化费用获取失败:", err);
+        }
+    }
+
+    setupMintFeeListener() {
+        const input = document.getElementById("mintAmount");
+        const info = document.getElementById("mintFeeInfo");
+
+        if (!input || !info) return;
+
+        input.addEventListener("input", async () => {
+            if (!input.value) {
+                info.textContent = "";
+                return;
+            }
+
+            const feePer = await contractManager.contract.mintFeePerCredit();
+            const total = feePer * BigInt(input.value);
+            info.innerHTML = `
+            <span style="color:#764ba2;">本次铸造将收取 <b>${ethers.formatEther(total)} ETH</b></span>
+        `;
+        });
+    }
+
+    setupRetireFeeListener() {
+        const input = document.getElementById("retireAmount");
+        const info = document.getElementById("retireFeeInfo");
+
+        if (!input || !info) return;
+
+        input.addEventListener("input", async () => {
+            if (!input.value) {
+                info.textContent = "";
+                return;
+            }
+
+            const feePer = await contractManager.contract.retireFeePerCredit();
+            const total = feePer * BigInt(input.value);
+            info.innerHTML = `
+            <span style="color:#764ba2;">本次注销将收取 <b>${ethers.formatEther(total)} ETH</b></span>
+        `;
+        });
+    }
+
 }
 
 // 应用启动

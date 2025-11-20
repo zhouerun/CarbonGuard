@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESS, CONTRACT_ABI, INFURA_KEY } from "./contract-config.js";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "./contract-config.js";
 import { INFURA_KEY } from "./dashboard-config.js";
 // ======= PROVIDER（无需钱包） =======
 const provider = new ethers.providers.JsonRpcProvider(
@@ -109,9 +109,12 @@ async function loadEventsAndDrawCharts(tokenId, minted, retired, active, tobeMin
 
         // 从区块头取 timestamp
         const block = await provider.getBlock(e.blockNumber);
-        const date = new Date(block.timestamp * 1000).toISOString().split("T")[0];
+        // 按小时统计 retirement event
+        const hourKey = new Date(block.timestamp * 1000)
+            .toISOString()
+            .slice(0, 13);  // 例如：2025-11-18T09
 
-        dateMap[date] = (dateMap[date] || 0) + amount;
+        dateMap[hourKey] = (dateMap[hourKey] || 0) + amount;
         addressMap[addr] = (addressMap[addr] || 0) + amount;
     }
 
@@ -135,7 +138,7 @@ function drawCharts(dateMap, minted, retired, active, tobeMinted, addressMap) {
         type: "line",
         data: {
             labels: Object.keys(dateMap),
-            datasets: [{ data: Object.values(dateMap), borderWidth: 2 }]
+            datasets: [{ data: Object.values(dateMap), borderWidth: 2, label: "Retired Amount"}]
         },
         options: {
             responsive: true,
@@ -169,7 +172,7 @@ function drawCharts(dateMap, minted, retired, active, tobeMinted, addressMap) {
     barChart = new Chart(document.getElementById("barChart"), {
         type: "bar",
         data: {
-            labels: Object.keys(addressMap),
+            labels: Object.keys(addressMap).map(addr => addr.substring(0, 8)),
             datasets: [{ label: "Retired Amount", data: Object.values(addressMap) }]
         }
     });
@@ -208,9 +211,25 @@ function drawCharts(dateMap, minted, retired, active, tobeMinted, addressMap) {
 
 }
 
+// ==========================================
+// ⭐ 加载平台累计收益
+// ==========================================
+async function loadPlatformRevenue() {
+    try {
+        const revenueWei = await contract.totalFeeRevenue();
+        const revenueEth = ethers.utils.formatEther(revenueWei);
+
+        document.getElementById("platformRevenueValue").textContent =
+            parseFloat(revenueEth).toFixed(6) + " ETH";
+
+    } catch (err) {
+        console.error("加载平台收益失败:", err);
+    }
+}
 
 
 // ==========================================
 // 初始化
 // ==========================================
 loadAllProjects();
+loadPlatformRevenue();
