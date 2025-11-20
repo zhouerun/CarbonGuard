@@ -1,5 +1,5 @@
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "./contract-config.js";
-const INFURA_KEY = "cb0d9b12d2254b738dcb41d159da583d"
+import { CONTRACT_ADDRESS, CONTRACT_ABI, INFURA_KEY } from "./contract-config.js";
+import { INFURA_KEY } from "./dashboard-config.js";
 // ======= PROVIDER（无需钱包） =======
 const provider = new ethers.providers.JsonRpcProvider(
     `https://sepolia.infura.io/v3/${INFURA_KEY}`

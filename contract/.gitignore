@@ -11,5 +11,8 @@
 !contracts/
 !contracts/**
 
+# 不提交dashboard-config.js有敏感信息
+dashboard-config.js
+
 # 备注：如果之前已经将其它文件提交到 git 索引（tracked），
 # 需要运行下面提供的命令来从索引中移除它们（不会删除工作区文件）。
