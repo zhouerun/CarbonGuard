@@ -147,4 +147,10 @@ contract SimpleCarbonCredit is ERC1155, Ownable {
     function getActiveCredits(uint256 tokenId) external view returns (uint256) {
         return projects[tokenId].mintedCredits - projects[tokenId].retiredCredits;
     }
+
+    // 获取项目数量
+    function getTotalProjects() external view returns (uint256) {
+        return _nextTokenId - 1;
+    }
+
 }

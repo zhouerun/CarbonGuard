@@ -117,16 +117,29 @@ class WalletConnector {
     setupEventListeners() {
         if (!window.ethereum) return;
 
-        // 账户变化
         window.ethereum.on("accountsChanged", async (accounts) => {
+            console.log("🔄 账户切换:", accounts);
+
             if (accounts.length === 0) {
                 this.handleDisconnect();
-            } else {
-                this.account = accounts[0];
-                this.updateWalletDisplay();
-                this.showInfo("账户已切换");
+                return;
+            }
+
+            // 重新初始化 provider + signer（关键修复点）
+            this.provider = new ethers.BrowserProvider(window.ethereum);
+            this.signer = await this.provider.getSigner();
+            this.account = await this.signer.getAddress();
+
+            // 更新 UI
+            this.updateWalletDisplay();
+            this.showInfo("账户已切换");
+
+            // 同步更新 ContractManager（必须）
+            if (window.contractManager) {
+                await window.contractManager.initContract();
             }
         });
+
 
         // 网络变化
         window.ethereum.on("chainChanged", async (chainIdHex) => {
