@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Temporary files created by server or scripts
+temp/
+carbonguard-temp/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Build output
+dist/
+build/

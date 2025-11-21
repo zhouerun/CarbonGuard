@@ -24,6 +24,17 @@ class CarbonCreditApp {
             this.handleCreateProject();
         });
 
+        const uploadForm = document.getElementById('uploadMetadataForm');
+        if (uploadForm) uploadForm.addEventListener('submit', (e) => { e.preventDefault(); this.handleUploadMetadata(); });
+
+        const addAttrBtn = document.getElementById('addAttributeBtn');
+        if (addAttrBtn) addAttrBtn.addEventListener('click', (e) => { e.preventDefault(); this.addAttributeRow(); });
+
+        // 现有的移除属性按钮绑定
+        document.querySelectorAll('.remove-attr').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.preventDefault(); const row = btn.closest('.attribute-row'); if (row) row.remove(); });
+        });
+
         document.getElementById('verifyProjectForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleVerifyProject();
@@ -124,6 +135,92 @@ class CarbonCreditApp {
         } catch (error) {
             // 错误已经在 contractManager 中处理
         }
+    }
+
+    // 添加一个属性输入行
+    addAttributeRow() {
+        const container = document.getElementById('attributesContainer');
+        if (!container) return;
+
+        const div = document.createElement('div');
+        div.className = 'attribute-row';
+        div.innerHTML = `
+            <input type="text" class="attr-type" placeholder="属性名 (trait_type)" />
+            <input type="text" class="attr-value" placeholder="属性值 (value)" />
+            <button class="remove-attr btn btn-sm" type="button">移除</button>
+        `;
+        container.appendChild(div);
+
+        const removeBtn = div.querySelector('.remove-attr');
+        if (removeBtn) removeBtn.addEventListener('click', (e) => { e.preventDefault(); div.remove(); });
+    }
+
+    // 处理上传元数据到后端 server.js（并展示返回结果）
+    async handleUploadMetadata() {
+        // Ensure wallet connected (same pattern as handleCreateProject)
+        if (!this.validateWalletConnection()) return;
+
+        const name = document.getElementById('metaName')?.value || '';
+        const description = document.getElementById('metaDescription')?.value || '';
+        const image = document.getElementById('metaImage')?.value || '';
+        const projectId = document.getElementById('metaProjectId')?.value || `TEST-${Date.now()}`;
+
+        const attributes = [];
+        const rows = document.querySelectorAll('#attributesContainer .attribute-row');
+        rows.forEach(r => {
+            const t = r.querySelector('.attr-type')?.value || '';
+            const v = r.querySelector('.attr-value')?.value || '';
+            if (t || v) attributes.push({ trait_type: t, value: v });
+        });
+
+        const metadata = {
+            name: name || `CarbonCredit Test ${Date.now()}`,
+            description: description || 'Carbon Credit',
+            image: image || 'ipfs://placeholder',
+            attributes: attributes,
+            project_id: projectId,
+            timestamp: new Date().toISOString()
+        };
+
+        const resultEl = document.getElementById('uploadResult');
+        if (resultEl) resultEl.innerHTML = '上传中...';
+
+        try {
+            const res = await fetch('http://localhost:3001/api/upload-carbon-metadata', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ metadata })
+            });
+
+            const data = await res.json();
+            this.displayUploadResult(data);
+
+            // show a brief transaction/status message if contractManager exposes helper
+            try { if (contractManager && contractManager.showTransactionStatus) contractManager.showTransactionStatus('元数据上传完成', 'success'); } catch(e) {}
+
+            // 重置表单（不影响 displayUploadResult 的内容）
+            const uploadForm = document.getElementById('uploadMetadataForm');
+            if (uploadForm) uploadForm.reset();
+
+        } catch (err) {
+            console.error('Upload failed', err);
+            try { if (contractManager && contractManager.showTransactionStatus) contractManager.showTransactionStatus('元数据上传失败: ' + err.message, 'error'); } catch(e) {}
+            if (resultEl) resultEl.innerHTML = `<div class="error">上传失败: ${err.message}</div>`;
+        }
+    }
+
+    // 在前端显示 server 返回的信息
+    displayUploadResult(resp) {
+        const el = document.getElementById('uploadResult');
+        if (!el) return;
+
+            // 以纯文本显示后端返回的原始 JSON
+        try {
+            el.textContent = JSON.stringify(resp, null, 2);
+        } catch (e) {
+            el.textContent = String(resp);
+        }
+                       
     }
 
     // 处理验证项目

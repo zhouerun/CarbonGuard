@@ -51,6 +51,42 @@
 
             <!-- 项目管理标签页 -->
             <div id="project-tab" class="tab-content active">
+                <h2>上传元数据到 IPFS（测试）</h2>
+                <form id="uploadMetadataForm" class="form">
+                    <div class="form-group">
+                        <label for="metaName">名称:</label>
+                        <input type="text" id="metaName" required placeholder="例如: CarbonGuard Test Credit">
+                    </div>
+                    <div class="form-group">
+                        <label for="metaDescription">描述:</label>
+                        <textarea id="metaDescription" required placeholder="例如: 测试碳信用 - 开发阶段"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="metaImage">图片 URI:</label>
+                        <input type="text" id="metaImage" placeholder="例如: ipfs://Qm... 或 https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>属性 (可添加多行):</label>
+                        <div id="attributesContainer">
+                            <div class="attribute-row">
+                                <input type="text" class="attr-type" placeholder="属性名 (trait_type)" />
+                                <input type="text" class="attr-value" placeholder="属性值 (value)" />
+                                <button class="remove-attr btn btn-sm" type="button">移除</button>
+                            </div>
+                        </div>
+                        <button id="addAttributeBtn" class="btn btn-small" type="button">添加属性</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="metaProjectId">项目ID:</label>
+                        <input type="text" id="metaProjectId" placeholder="例如: TEST-123" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">上传到 IPFS</button>
+                </form>
+
+                <div id="uploadResult" class="upload-result" style="margin-top:12px;"></div>
+
+                <hr />
+
                 <h2>创建碳信用项目</h2>
                 <form id="createProjectForm" class="form">
                     <div class="form-group">
