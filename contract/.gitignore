@@ -10,7 +10,7 @@
 # 允许 contracts 目录及其所有子文件/子目录被跟踪
 !contracts/
 !contracts/**
-
+!test.js
 # 不提交dashboard-config.js有敏感信息
 dashboard-config.js
 
